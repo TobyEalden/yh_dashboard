@@ -114,10 +114,10 @@ if (typeof window.centrePoint === "undefined") {
   webix.debug = true;
 
   // Include ui elements.
-  webix.require("../javascripts/webix-ui.js");
+//  webix.require("../javascripts/webix-ui.js");
 
   webix.ready(function() {
-    if (webix.env.touch) {
+    if (true || webix.env.touch) {
       // On a touch-screen device.
       webix.ui.fullScreen();
 

@@ -165,41 +165,15 @@ centrePoint.uiMainLayout = {
   id: "rootLayout",
   rows: [
     {
-      type: "space",
+      responsive: "rootLayout",
       cols: [
-        {
-          minWidth: 300,
-          rows: [
-            {
-              id: "mainHeader",
-              view: "toolbar",
-              elements: [
-                { view: "button", id: "mapButton", type: "iconButton", icon: "chevron-left", label: "map", width: 70, on: { onItemClick: centrePoint.viewChanged } },
-                { view: "label", id: "featureLabel", label: "Official youth homelessness"},
-                { view: "button", id: "resetButton", borderless: true, type: "iconButton", icon: "refresh", label: "reset map", width: 110, on: { onItemClick: resetMap } }
-              ]
-
-            },
-            {
-              id: "mainPanelView",
-              view: "multiview",
-              cells: [
-                centrePoint.uiHomelessnessMap,
-                centrePoint.uiHomelessnessFeatureView
-              ]
-            }
-          ]
-        },
         {
           view: "accordion",
           id: "viewAccordion",
-
           width: 310,
           type: "line",
           multi: false,
-          responsive: "rootLayout",
           rows: [
-
             {
               header: "Official youth homelessness",
               id: "homelessnessView",
@@ -222,6 +196,29 @@ centrePoint.uiMainLayout = {
               headerHeight: 48,
               collapsed: true,
               body: centrePoint.uiRiskFactorsSideBar
+            }
+          ]
+        },
+        {
+          minwidth: 450,
+          rows: [
+            {
+              id: "mainHeader",
+              view: "toolbar",
+              elements: [
+                { view: "button", id: "mapButton", type: "iconButton", icon: "chevron-left", label: "map", width: 70, on: { onItemClick: centrePoint.viewChanged } },
+                { view: "label", id: "featureLabel", label: "Official youth homelessness"},
+                { view: "button", id: "resetButton", borderless: true, type: "iconButton", icon: "refresh", label: "reset map", width: 110, on: { onItemClick: resetMap } }
+              ]
+
+            },
+            {
+              id: "mainPanelView",
+              view: "multiview",
+              cells: [
+                centrePoint.uiHomelessnessMap,
+                centrePoint.uiHomelessnessFeatureView
+              ]
             }
           ]
         }
@@ -253,6 +250,38 @@ centrePoint.uiPageLayout = {
     }
   ]
 };
-
-
-
+//
+//
+//var test =
+//{
+//  type:"space",
+//  id:"a1",
+//  rows:[
+//    {
+//      type:"space",
+//      padding:0,
+//      responsive:"a1",
+//      cols:[
+//        {
+//          view:"list",
+//          data:["Users", "Reports", "Settings"],
+//          ready:function(){ this.select(this.getFirstId()); },
+//          select:true,
+//          scroll:false,
+//          width:200
+//        },
+//        {
+//          template:"column 2",
+//          width:200
+//        },
+//        {
+//          view:"datatable",
+//          select:true,
+//          columns:[{ id:"title", fillspace:1 }, { id:"votes"}],
+//          data:small_film_set,
+//          minWidth:300
+//        }
+//      ]
+//    }
+//  ]
+//};
