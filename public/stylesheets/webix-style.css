@@ -24,6 +24,13 @@ html {
     width: 100px;
 }
 
+.cp_floating_key {
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    z-index: 90;
+}
+
 .cp_logo img {
     height: 70px;
 }
@@ -78,6 +85,10 @@ html {
     font-size: 15px;
     background: #D04627;
     color: white;
+}
+
+.cp_welcomeMap {
+    float: right;
 }
 
 .webix_view.cp_riskFactorIntro p {

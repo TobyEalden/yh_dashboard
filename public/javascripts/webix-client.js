@@ -6,9 +6,11 @@ if (typeof window.centrePoint === "undefined") {
 }
 
 (function() {
-  var activeView = "";
+  var activeMap = "";
   var activeFeatureId = "";
   var activeFeatureName = "";
+  centrePoint.mapInitialised = false;
+  centrePoint.useTouch = true; //webix.env.touch;
 
   // Renders the information for the currently active feature.
   centrePoint.renderFeatureInfo = function() {
@@ -33,7 +35,7 @@ if (typeof window.centrePoint === "undefined") {
 
   // Re-loads the data based on the date slider value.
   centrePoint.onDataDateChange = function(index) {
-    showMap(true);
+    showView("map");
     setHeaderTitle();
 
     if (false === $$("homelessnessView").config.collapsed) {
@@ -68,46 +70,53 @@ if (typeof window.centrePoint === "undefined") {
       }
     }
 
-    showMap(true);
+    showView("map");
     setMapBusy();
     getRiskFactorData(selected);
   };
 
-  centrePoint.viewChanged = function() {
-    var newView;
+  centrePoint.accordionViewChanged = function() {
+    var newMapView;
     if (false === $$("homelessnessView").config.collapsed) {
-      newView = "homelessness";
+      newMapView = "homelessness";
     } else if (false === $$("missingView").config.collapsed) {
-      newView = "missing";
+      newMapView = "missing";
     } else {
-      newView = "riskFactors";
+      newMapView = "riskFactors";
     }
 
-    activeView = newView;
+    activeMap = newMapView;
     activeFeatureId = activeFeatureName = "";
 
-    showMap(true);
+    showView("map");
 
-    if ($$("homelessnessMap").map) {
-      switch (newView) {
-        case "homelessness":
-          centrePoint.onDataDateChange($$("homelessnessDateSlider").getValue());
-          break;
-        case "missing":
-          getHomelessnessData("P1E_Missing" ,0);
-          break;
-        case "riskFactors":
-          centrePoint.riskFactorSelection();
-          break;
+    if (centrePoint.mapInitialised) {
+      if ($$("homelessnessMap").map) {
+        switch (activeMap) {
+          case "homelessness":
+            centrePoint.onDataDateChange($$("homelessnessDateSlider").getValue());
+            break;
+          case "missing":
+            getHomelessnessData("P1E_Missing", 0);
+            break;
+          case "riskFactors":
+            centrePoint.riskFactorSelection();
+            break;
+          default:
+            break;
+        }
       }
-    }
 
-    setHeaderTitle();
+      setHeaderTitle();
+    }
   };
 
   centrePoint.onSourceClick = function() {
-    activeFeatureId = "sources"
-    showFeature();
+    showView("source");
+  };
+
+  centrePoint.onLegendClick = function() {
+    showView("legend");
   };
 
   // Enable webix debugging.
@@ -117,59 +126,24 @@ if (typeof window.centrePoint === "undefined") {
 //  webix.require("../javascripts/webix-ui.js");
 
   webix.ready(function() {
-    if (true || webix.env.touch) {
+    if (centrePoint.useTouch) {
       // On a touch-screen device.
       webix.ui.fullScreen();
 
       // Create the webix ui.
       webix.ui(centrePoint.uiMainLayout);
-
-      // In touch mode, add the logo and search box as overlays on the map view
-      // to optimise space.
-      var ele = document.createElement("div");
-      ele.innerHTML = "<div class='cp_floating_logo'><img src='/images/logo.png' /></div>";
-      $$("homelessnessMap")._contentobj.appendChild(ele.firstChild);
-
-      // Create a container for the search ui.
-      ele = document.createElement("div");
-      ele.innerHTML = "<div class='cp_floating_search' id='searchBox' />";
-      $$("homelessnessMap")._contentobj.appendChild(ele.firstChild);
-
-      // Create the search ui.
-      webix.ui({
-        view: "search",
-        container: "searchBox",
-        placeholder: "search",
-        on: { onChange: findAddress }
-      });
     } else {
       // On an non-touch screen device.
       webix.ui(centrePoint.uiPageLayout);
     }
 
-    // Add listeners for click, hover and idle events.
-    var gmap = $$("homelessnessMap").map;
-    gmap.data.addListener('mouseover', onMouseOverMap);
-    gmap.data.addListener('mouseout', onMouseOffMap);
-    gmap.data.addListener('click', onFeatureClick);
-    gmap.addListener('idle', clearMapBusy);
-
-
     // Add an overlay for the 'loading' icon.
     webix.extend($$("homelessnessMap"), webix.ProgressBar);
 
-    // Initialise the map data.
-    initialiseMap(gmap);
+    $$("viewAccordion").attachEvent("onAfterExpand",  centrePoint.accordionViewChanged);
 
-    $$("viewAccordion").attachEvent("onAfterExpand",  centrePoint.viewChanged);
-
-    // Force initial data load.
-    centrePoint.viewChanged();
-
-    if (preLoadFeature && preLoadFeature.length > 0) {
-      activeFeatureId = preLoadFeature;
-      showFeature();
-    }
+    activeFeatureId = preLoadFeature;
+    showView(preLoadView);
   });
 
   function getHomelessnessData(type, index) {
@@ -193,7 +167,7 @@ if (typeof window.centrePoint === "undefined") {
 
   function setHeaderTitle() {
     var title = "";
-    switch (activeView) {
+    switch (activeMap) {
       case "homelessness":
         var index = $$("homelessnessDateSlider").getValue();
         title = "Official youth homelessness"; // + aDates[index][0] + "/" + aDates[index][1];
@@ -213,15 +187,42 @@ if (typeof window.centrePoint === "undefined") {
     $$("featureLabel").refresh();
   }
 
-  function showMap(show) {
-    if (show) {
-      $$("mapButton").hide();
-      $$("resetButton").show();
-      $$("mainPanelView").setValue("homelessnessMap");
-    } else {
-      $$("mapButton").show();
-      $$("resetButton").hide();
-      $$("mainPanelView").setValue("homelessnessFeatureView");
+  function loadMap() {
+    if (!centrePoint.mapInitialised) {
+      // In touch mode, add the logo and search box as overlays on the map view
+      // to optimise space.
+      var ele = document.createElement("div");
+      ele.innerHTML = "<div class='cp_floating_logo'><img src='/images/logo.png' /></div>";
+      $$("homelessnessMap")._contentobj.appendChild(ele.firstChild);
+
+      // Create a container for the search ui.
+      ele = document.createElement("div");
+      ele.innerHTML = "<div class='cp_floating_search' id='searchBox' />";
+      $$("homelessnessMap")._contentobj.appendChild(ele.firstChild);
+
+      ele = document.createElement("div");
+      ele.innerHTML = "<div class='cp_floating_key' id='keyBox' />";
+      $$("homelessnessMap")._contentobj.appendChild(ele.firstChild);
+
+      // Create the search ui.
+      webix.ui(centrePoint.uiFloatingSearch);
+
+      // Create the legend ui
+      webix.ui(centrePoint.uiLegendButton);
+
+      // Add listeners for click, hover and idle events.
+      var gmap = $$("homelessnessMap").map;
+      gmap.data.addListener('mouseover', onMouseOverMap);
+      gmap.data.addListener('mouseout', onMouseOffMap);
+      gmap.data.addListener('click', onFeatureClick);
+      gmap.addListener('idle', clearMapBusy);
+
+      // Initialise the map data.
+      initialiseMap(gmap);
+
+      centrePoint.mapInitialised = true;
+
+      centrePoint.accordionViewChanged();
     }
   }
 
@@ -241,18 +242,6 @@ if (typeof window.centrePoint === "undefined") {
     }
   }
 
-  function showFeature() {
-    showMap(false);
-
-    setHeaderTitle();
-
-    // Get feature view to render with new selection.
-    $$("homelessnessFeatures").refresh();
-
-    // Make sure feature view is visible.
-    $$("homelessnessFeatureView").scrollTo(0,0);
-  }
-
   function onFeatureClick(event){
     // Get feature details.
     activeFeatureId = event.feature.getProperty('geo_code');
@@ -260,7 +249,35 @@ if (typeof window.centrePoint === "undefined") {
 
     window.history.pushState(null,null,"/feature/" + activeFeatureId);
 
-    showFeature();
+    showView("feature");
+  }
+
+  function showView(view) {
+    $$("mapButton").show();
+    $$("resetButton").hide();
+
+    switch(view) {
+      case "map":
+        $$("mapButton").hide();
+        $$("resetButton").show();
+        $$("mainPanelView").setValue("homelessnessMap");
+        loadMap();
+        window.history.pushState(null, null, "/");
+        break;
+      case "feature":
+        $$("mainPanelView").setValue("homelessnessFeatureView");
+        break;
+      case "source":
+        $$("mainPanelView").setValue("sourceView");
+        break;
+      case "welcome":
+        $$("mainPanelView").setValue("welcomeView");
+        window.history.pushState(null,null,"/welcome");
+        break;
+      case "legend":
+        $$("mainPanelView").setValue("legendView");
+        break;
+    }
   }
 }());
 

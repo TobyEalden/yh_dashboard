@@ -34,7 +34,7 @@ function initialiseMap(gmap) {
     zoomControl: true,
     zoomControlOptions: {
       style: google.maps.ZoomControlStyle.SMALL,
-      position: webix.env.touch ? google.maps.ControlPosition.RIGHT_CENTER : google.maps.ControlPosition.TOP_RIGHT
+      position: centrePoint.useTouch ? google.maps.ControlPosition.RIGHT_CENTER : google.maps.ControlPosition.TOP_RIGHT
     }
   });
 

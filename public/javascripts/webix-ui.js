@@ -17,6 +17,13 @@ centrePoint.uiSearchForm = {
   ]
 };
 
+centrePoint.uiFloatingSearch = {
+  view: "search",
+    container: "searchBox",
+  placeholder: "search",
+  on: { onChange: findAddress }
+};
+
 // Header used in non-touch scenarios.
 centrePoint.uiHeader = {
   height: 80,
@@ -26,6 +33,16 @@ centrePoint.uiHeader = {
     {},
     centrePoint.uiSearchForm
   ]
+};
+
+centrePoint.uiLegendButton = {
+  view: "button",
+  type: "iconButton",
+  icon: "key",
+  label: "key",
+  width: 70,
+  container: "keyBox",
+  on: { onItemClick: centrePoint.onLegendClick }
 };
 
 //************************************************************************
@@ -73,8 +90,6 @@ centrePoint.uiHomelessnessFeatureView = {
   body: {
         id: "homelessnessFeatures",
         view: "template",
-        minWidth: 200,
-        maxWidth: 800,
         autoheight: true,
         template: centrePoint.renderFeatureInfo
   }
@@ -83,8 +98,22 @@ centrePoint.uiHomelessnessFeatureView = {
 // Main map view.
 centrePoint.uiHomelessnessMap = {
   id: "homelessnessMap",
-  view: "google-map",
-  minWidth: 300
+  view: "google-map"
+};
+
+centrePoint.uiSourceView = {
+  id: "sourceView",
+  template: "html->sourceView"
+};
+
+centrePoint.uiWelcomeView = {
+  id: "welcomeView",
+  template: "html->welcomeInfo"
+};
+
+centrePoint.uiLegendView = {
+  id: "legendView",
+  template: "html->legendView"
 };
 
 //************************************************************************
@@ -174,7 +203,7 @@ centrePoint.uiMainLayout = {
               id: "mainHeader",
               view: "toolbar",
               elements: [
-                { view: "button", id: "mapButton", type: "iconButton", icon: "chevron-left", label: "map", width: 70, on: { onItemClick: centrePoint.viewChanged } },
+                { view: "button", id: "mapButton", type: "iconButton", icon: "chevron-left", label: "map", width: 80, on: { onItemClick: centrePoint.accordionViewChanged } },
                 { view: "label", id: "featureLabel", label: "Official youth homelessness"},
                 { view: "button", id: "resetButton", borderless: true, type: "iconButton", icon: "refresh", label: "reset map", width: 110, on: { onItemClick: resetMap } }
               ]
@@ -183,9 +212,14 @@ centrePoint.uiMainLayout = {
             {
               id: "mainPanelView",
               view: "multiview",
+              minWidth: 300,
+              fitBiggest: true,
               cells: [
+                centrePoint.uiWelcomeView,
                 centrePoint.uiHomelessnessMap,
-                centrePoint.uiHomelessnessFeatureView
+                centrePoint.uiHomelessnessFeatureView,
+                centrePoint.uiSourceView,
+                centrePoint.uiLegendView
               ]
             }
           ]
@@ -193,7 +227,8 @@ centrePoint.uiMainLayout = {
         {
           view: "accordion",
           id: "viewAccordion",
-          width: 310,
+          minWidth: 310,
+          gravity: 0.01,
           type: "line",
           multi: false,
           rows: [
@@ -250,38 +285,3 @@ centrePoint.uiPageLayout = {
     }
   ]
 };
-//
-//
-//var test =
-//{
-//  type:"space",
-//  id:"a1",
-//  rows:[
-//    {
-//      type:"space",
-//      padding:0,
-//      responsive:"a1",
-//      cols:[
-//        {
-//          view:"list",
-//          data:["Users", "Reports", "Settings"],
-//          ready:function(){ this.select(this.getFirstId()); },
-//          select:true,
-//          scroll:false,
-//          width:200
-//        },
-//        {
-//          template:"column 2",
-//          width:200
-//        },
-//        {
-//          view:"datatable",
-//          select:true,
-//          columns:[{ id:"title", fillspace:1 }, { id:"votes"}],
-//          data:small_film_set,
-//          minWidth:300
-//        }
-//      ]
-//    }
-//  ]
-//};
