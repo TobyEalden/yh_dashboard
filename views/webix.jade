@@ -3,8 +3,8 @@ html
     head
         link(rel="stylesheet", href="/webix/webix.css", type="text/css")
         link(rel="stylesheet", href="/stylesheets/webix-style.css", type="text/css")
-        script(type="text/javascript", src="/webix/webix_debug.js")
         script(type="text/javascript", src="http://maps.google.com/maps/api/js?sensor=true")
+        script(type="text/javascript", src="/webix/webix_debug.js")
         script(type="text/javascript", src="/javascripts/webix-googlemap.js")
         script(src="http://d3js.org/d3.v3.min.js")
         script(src="http://d3js.org/topojson.v1.min.js")
@@ -109,7 +109,7 @@ html
         div.cp_hidden(id="welcomeInfo")
             p.titleText Welcome to the CentrePoint Youth Homelessness visualisation
             p.cp_welcomeMap
-                a(href="#", onclick="centrePoint.accordionViewChanged();")
+                a(href="#", onclick="centrePoint.accordionViewChanged(); return false;")
                     img(src="/images/welcomeMap.png", alt="welcome map")
             p Use the side-bar on the right to select and filter the data that is shown.
             p Click on the map to see more details for the local area.

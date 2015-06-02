@@ -21,6 +21,7 @@ cdo.getDataObjects(function(oEntities, oNational) {
 
   app.get("/", function(req,res) {
     res.render("webix", {
+      activeView: "welcome",
       quarter: sQuarter,
       mapStyle: mapStyle,
       topoLa: oLaTopo,
@@ -28,6 +29,14 @@ cdo.getDataObjects(function(oEntities, oNational) {
       entities: oEntities,
       national: oNational
     });
+  });
+
+  app.get("/mapTest", function(req, res) {
+    res.render("mapTest");
+  });
+
+  app.get("/mapTestWebix", function(req, res) {
+    res.render("mapTestWebix");
   });
 
   app.get('/feature/:id', function(req, res) {
@@ -76,9 +85,9 @@ cdo.getDataObjects(function(oEntities, oNational) {
       })
   });
 
-  app.get("/welcome", function(req, res, next) {
+  app.get("/explore", function(req, res, next) {
     res.render('webix', {
-      activeView: "welcome",
+      activeView: "map",
       quarter: sQuarter,
       mapStyle: mapStyle,
       topoLa: oLaTopo,
