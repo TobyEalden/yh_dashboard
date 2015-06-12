@@ -128,7 +128,7 @@ centrePoint.uiWelcomeView = {
     {
       view: "button",
       label: "got it!",
-      width: 400,
+      width: 250,
       align: "left",
       on: { onItemClick: centrePoint.accordionViewChanged }
     },
@@ -361,7 +361,7 @@ centrePoint.uiMainLayout = {
             {
               id: "mainPanelView",
               view: "multiview",
-              minWidth: 360,
+              minWidth: 330,
               fitBiggest: true,
               cells: [
                 centrePoint.uiWelcomeView,
@@ -379,10 +379,9 @@ centrePoint.uiMainLayout = {
         {
           view: "accordion",
           id: "viewAccordion",
-          minWidth: 310,
+          minWidth: 300,
           gravity: 0.01,
           type: "line",
-          //height: 120,
           multi: false,
           rows: [
             {

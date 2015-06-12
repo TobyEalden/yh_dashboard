@@ -60,6 +60,9 @@ button,
   filter: progid:DXImageTransform.Microsoft.Alpha(opacity=40);
   z-index: 1;
 }
+.webix_disabled_view {
+  overflow: hidden !important;
+}
 body.webix_full_screen {
   margin: 0;
   padding: 0;
@@ -570,6 +573,16 @@ x\:ui {
   cursor: default;
   background-color: #ffdb8f;
   border: 1px solid #ffd47b;
+}
+.webix_animation .webix_ss_header {
+  position: relative;
+  z-index: 10;
+}
+.webix_animation .webix_ss_footer,
+.webix_animation .webix_vscroll_x {
+  position: absolute;
+  bottom: 0px;
+  z-index: 10;
 }
 /*helper for allowing selection*/
 .webix_allow_selection {
@@ -1167,6 +1180,10 @@ div.webix_modal_cover {
   background-image: -o-linear-gradient(top, #eaf3ff 0%, #e5f1ff 60%, #d6e8ff 100%);
   background-position: 0px 1px;
   background-repeat: repeat-x;
+}
+.webix_ss_footer TD,
+.webix_ss_vscroll_footer {
+  background: white;
 }
 /*content in header and footer*/
 .webix_hcell {
@@ -2563,7 +2580,8 @@ textarea.webix_invalid {
   opacity: 0;
 }
 .webix_view.webix_control .webix_disabled_box label,
-.webix_view.webix_control .webix_disabled_box .webix_input_icon {
+.webix_view.webix_control .webix_disabled_box .webix_input_icon,
+.webix_view.webix_control .webix_disabled_box button {
   color: #aaaaaa;
 }
 .webix_view.webix_control .webix_disabled_box input,

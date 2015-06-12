@@ -3,7 +3,7 @@ Skin for Webix UI ( http://webix.com )
 =======================================
 
 To preview or adjust skin visit
-	http://webix.com/skin-builder/eb8cde2a
+	http://webix.com/skin-builder/6a25f94e
 
 #### How to use
 
@@ -13,6 +13,6 @@ To preview or adjust skin visit
 ### Hot to update to new version of Webix
 
 When new version released, just visit
-	http://webix.com/skin-builder/eb8cde2a
+	http://webix.com/skin-builder/6a25f94e
 and re-download the package, it will be the new version with the same skin settings
 
